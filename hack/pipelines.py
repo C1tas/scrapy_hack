@@ -6,9 +6,11 @@
 # See: http://doc.scrapy.org/en/latest/topics/item-pipeline.html
 
 import pymongo
+import logging
 
 from scrapy.conf import settings
 from scrapy.exceptions import DropItem
+
 
 
 class HackPipeline(object):
@@ -18,38 +20,39 @@ class HackPipeline(object):
 
 class MongoDBPipeline(object):
 
-    def __init__(self):
-        self.mongo_url = settings['MONGODB_SERVER']
-        self.mongo_port = settings['MONGODB_PORT']
-        self.mongo_db = settings['MONGODB_DB']
+    # def __init__(self, mongo_url, mongo_port, mongo_db):
+    #     self.mongo_url = mongo_url
+    #     self.mongo_port = mongo_port
+    #     self.mongo_db = mongo_db
 
-    @classmethod
-    def from_crawler(cls, crawler):
-        return cls(
-            mongo_url = settings['MONGODB_SERVER'],
-            mongo_port = settings['MONGODB_PORT'],
-            mongo_db = settings['MONGODB_DB']
-        )
+    # @classmethod
+    # def from_crawler(cls, crawler):
+    #     return cls(
+    #         mongo_url = settings['MONGODB_SERVER'],
+    #         mongo_port = settings['MONGODB_PORT'],
+    #         mongo_db = settings['MONGODB_DB']
+    #     )
 
-    def open_spider(self, spider):
-        self.client = pymongo.MongoClient(
-            settings['MONGODB_SERVER'],
-            settings['MONGODB_PORT']
-        )
-        self.db = self.client[self.mongo_db]
+    # def open_spider(self, spider):
+    #     try:
+    #         self.client = pymongo.MongoClient(
+    #             self.mongo_url,
+    #             self.mongo_port
+    #         )
+    #         self.db = self.client[self.mongo_db]
+    #     except Exception as e:
+    #         logging.log(logging.ERROR, "There is a error happend")
 
-    def close_spider(self, spider):
-        self.client.close()
+    # def close_spider(self, spider):
+    #     self.client.close()
 
     def process_item(self, item, spider):
-        vaild = True
-        print(item)
-        for data in item:
-            if not data:
-                vaild = False
-                raise DropItem("Missing {0}!".format(data))
-            if vaild:
-                self.collection.insert(dict(item))
-                log.msg("House added to MongoDB database~",
-                        level=log.DEBUG, spider=spider)
-            return item
+        if item:
+            print(item)
+            raise DropItem("Duplicate item found: %s" % item)
+            logging.log(logging.WARNING, "FUCKC!!!!!!!!!!!!!!!!!!!!!!!!")
+        else:
+            raise DropItem("Duplicate item found: %s" % item)
+            logging.log(logging.WARNING, "FUCKC!!!!!!!!!!!!!!!!!!!!!!!!")
+        return item
+

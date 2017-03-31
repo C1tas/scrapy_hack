@@ -65,7 +65,7 @@ DOWNLOADER_MIDDLEWARES = {
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'hack.pipelines.MongoDBPipeline': 300,
+   'hack.pipelines.MongoDBPipeline': 543,
 }
 
 MONGODB_SERVER = "localhost"
