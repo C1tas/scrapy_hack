@@ -23,3 +23,5 @@ class HackItem(scrapy.Item):
     share_url = scrapy.Field()
     title = scrapy.Field()
     updated = scrapy.Field()
+
+    
